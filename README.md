@@ -28,6 +28,6 @@ You have been warned.
 
 ## License
 
-Copyright © 2012 FIXME
+Copyright © 2012 Martin Sander
 
 Distributed under the Eclipse Public License, the same as Clojure.
