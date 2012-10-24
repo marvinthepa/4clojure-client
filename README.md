@@ -8,23 +8,25 @@ You have been warned.
 
 ## Usage
 
-    (use 'fourclojure.client)
+```clojure
+(use 'fourclojure.client)
 
-    ;; just submit to the homepage without login
-    (check 1
-           {}
-           true)
+;; just submit to the homepage without login
+(check 1
+       {}
+       true)
 
-    ;; run tests offline before submitting (just copy the tests from the website, and wrap them in a quoted seq)
-    (check 5
-           {:tests '[(= __ (conj '(2 3 4) 1))
-                     (= __ (conj '(3 4) 2 1))]}
-           [1 2 3 4])
+;; run tests offline before submitting (just copy the tests from the website, and wrap them in a quoted seq)
+(check 5
+       {:tests '[(= __ (conj '(2 3 4) 1))
+                 (= __ (conj '(3 4) 2 1))]}
+       [1 2 3 4])
 
-    ;; submit to the homepage with "login" (copy the value of the "ring-session" cookie from your browser when logged in
-    (check 1
-           {:cookie "d0217053-6447-47c2-ab8d-8e9f436e18d9"}
-           true)
+;; submit to the homepage with "login" (copy the value of the "ring-session" cookie from your browser when logged in
+(check 1
+       {:cookie "d0217053-6447-47c2-ab8d-8e9f436e18d9"}
+       true)
+```
 
 ## License
 
