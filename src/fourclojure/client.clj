@@ -27,6 +27,11 @@
      :accept :json
      :form-params {:id problem-id :code body}}))
 
+(defn get-problem [id]
+  (json/parse-string
+   (:body
+    (http/get (str "http://www.4clojure.com/api/problem/" id)
+              {:accept :json}))))
 
 (defn run-and-submit
   [problem-id
