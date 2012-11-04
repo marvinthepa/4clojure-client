@@ -5,6 +5,7 @@
 
 (def ^:dynamic *current-problem* nil)
 (def ^:dynamic *cookie* nil)
+(def ^:dynamic *width* 80)
 
 (defn clean [s]
   (-> s
@@ -45,10 +46,11 @@
                           code))))
 
 (defn force-cols [cols s]
-  (string/replace (apply str
-                         (interpose "\n"
-                                    (re-seq #".{0,79}[\s\n]" (str s "\n"))))
-                  #"\n{2}" "\n"))
+  (let [pattern (re-pattern (format ".{0,%d}[\\s\\n]" (dec cols)))]
+    (string/replace (apply str
+                           (interpose "\n"
+                                      (re-seq pattern (str s "\n"))))
+                    #"\n{2}" "\n")))
 
 (defn select [id]
   (def ^:dynamic *current-problem*
@@ -66,7 +68,7 @@
        (let [{:keys [id title description tests
                      user difficulty restricted]} *current-problem*]
          (println
-          (force-cols 80
+          (force-cols *width*
                       (str
                        id ". *** " title " ***\n"
                        "author: " user "\n"
