@@ -154,10 +154,6 @@
 (defmacro check
   "check your solution of a 4clojure problem
    parameters
-    - problem-id: the id of the problem to solve
-    - body: your solution, exactly like you would enter it in the code box at 4clojure.com, plain code (not quoted, not as string)
-    - config: map of optional config options,
-      {:tests quoted seq of the tests from 4clojure.com, to be run locally before submitting. If any of the tests fail, they will not be submitted
-       :cookie value of the \"ring-session\"-cookie (extract it from your browser when logged in), needed for persisting your results}"
+    - body: your solution, exactly like you would enter it in the code box at 4clojure.com, plain code (not quoted, not as string)"
   [& body]
   `(run-and-submit-current '~body))
