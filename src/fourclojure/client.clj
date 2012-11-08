@@ -61,7 +61,6 @@
                   tests)]
     (every? identity results)))
 
-;; TODO check result
 (defn submit [cookie problem-id body]
   (http/post
     (str "http://www.4clojure.com/rest/problem/" problem-id)
@@ -93,8 +92,7 @@
 
 (defn run-and-submit
   [problem-id
-   {:keys [tests cookie]
-    :or {tests []}}
+   {:keys [tests cookie] :or {tests []}}
    forms]
   {:pre [problem-id]}
   (let [body (string/join
@@ -102,13 +100,11 @@
     (if-not (run-tests body tests)
       (str "/o\\ Fail /o\\\n") ;; TODO which test failed?
       (let [response (remote-check body)]
-        (println (str "body " body))
         (if (string/blank? (:message response))
          (str "/o\\ Error /o\\\n"
               (:error response))
          (str "\\o/ Success \\o/\n"
-              (clean (:message response)))))
-      )))
+              (clean (:message response))))))))
 
 (defn run-and-submit-current [forms]
   (run-and-submit *problem-id*
