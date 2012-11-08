@@ -11,8 +11,8 @@ You have been warned.
 ```clojure
 (use 'fourclojure.client)
 
-;; select problem 83
-(select! 1)
+;; select problem 1
+(view 1)
 
 ;; check your solution
 (check false)
