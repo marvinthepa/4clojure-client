@@ -11,25 +11,27 @@ You have been warned.
 ```clojure
 (use 'fourclojure.client)
 
-;; just submit to the homepage without login
-(check 1
-       {}
-       true)
+;; select problem 83
+(select! 1)
 
-;; run tests offline before submitting (just copy the tests from the website, and wrap them in a quoted seq)
-(check 5
-       {:tests '[(= __ (conj '(2 3 4) 1))
-                 (= __ (conj '(3 4) 2 1))]}
-       [1 2 3 4])
+;; check your solution
+(check false)
 
-;; submit to the homepage with "login" (copy the value of the "ring-session" cookie from your browser when logged in
-(check 1
-       {:cookie "d0217053-6447-47c2-ab8d-8e9f436e18d9"}
-       true)
+;; review the problem description and tests
+(view)
+
+;; try again
+(check true)
+
+;; heureka!
+
+;; set cookie to record your progress
+(set-cookie! "24b081f1-4d52-45db-7be8-4429b18ee6f7")
+(check true)
 ```
 
 ## License
 
-Copyright © 2012 Martin Sander
+Copyright © 2012 Martin Sander, Maximilian Karasz
 
 Distributed under the Eclipse Public License, the same as Clojure.
