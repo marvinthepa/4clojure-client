@@ -6,6 +6,7 @@
 (def ^:dynamic *problem-id* nil)
 (def ^:dynamic *current-problem* nil)
 (def ^:dynamic *cookie* nil)
+(def ^:dynamic *width* 80)
 
 ;; TODO does not support "See the solutions that the users you follow have submitted"
 (defn clean [s]
@@ -15,7 +16,16 @@
       (string/replace #"<.?code>" "")
       (string/replace #"<a.*?href=\"(.*?)\".*?>(.*?)<\/a>"
                       "$2 [$1]")
-      (string/replace #"<.?span.*?>" "")))
+      (string/replace #"<.?span.*?>" "")
+      (string/replace #"<.?br\s?.?>" "\n")
+      (string/replace #"\t\s" "")
+      (string/replace #"<.?ul>" "")
+      (string/replace #"<li>" "- ")
+      (string/replace #"<\/li>" "")
+      (string/replace #"<.?i>" "")
+      (string/replace #"&mdash;" "-")
+      (string/replace #"<.?strong>" "")
+      (string/replace #"\n{2,}" "\n\n")))
 
 (defn keywordize
   ([source]
@@ -67,6 +77,13 @@
                    (:id *current-problem*)
                    code))))
 
+(defn force-cols [cols s]
+  (let [pattern (re-pattern (format ".{0,%d}[\\s\\n]" (dec cols)))]
+    (string/replace (apply str
+                           (interpose "\n"
+                                      (re-seq pattern (str s "\n"))))
+                    #"\n{2}" "\n")))
+
 (defn get-problem [id]
   (json/parse-string
    (:body
@@ -99,6 +116,12 @@
                    :cookie *cookie*}
                   forms))
 
+(defn select [id]
+  (def ^:dynamic *problem-id* id)
+  (def ^:dynamic *current-problem*
+       (parse-problem (get-problem id) id))
+  (view))
+
 ;;
 ;; Commands
 ;;
@@ -106,23 +129,27 @@
 (defn set-cookie! [c]
   (def ^:dynamic *cookie* c))
 
-(defn view []
-  (if *current-problem*
-    (let [{:keys [id title description tests]} *current-problem*]
-      (println
-       (str
-        id ". "title "\n"
-        (clean description) "\n\n"
-        "Tests:" "\n"
-        (apply str (interpose "\n"
-                              (map clean tests))))))
-    (println "No problem selected - use select first.")))
-
-(defn select! [id]
-  (def ^:dynamic *problem-id* id)
-  (def ^:dynamic *current-problem*
-       (parse-problem (get-problem id) id))
-  (view))
+(defn view
+  ([]
+     (if *current-problem*
+       (let [{:keys [id title description tests
+                     user difficulty restricted]} *current-problem*]
+         (println
+          (force-cols *width*
+                      (str
+                       id ". *** " title " ***\n"
+                       "author: " user "\n"
+                       "level: " difficulty  "\n\n"
+                       (clean description) "\n\n"
+                       "Tests:" "\n"
+                       (apply str (interpose "\n"
+                                             (map clean tests)))
+                       (when (seq restricted)
+                         (str "\n\n" "Restrictions: " (pr-str restricted)))))))
+       (println "No problem selected - try (view <id>).")))
+  ([id]
+     (do (select id)
+         (view))))
 
 (defmacro check
   "check your solution of a 4clojure problem
